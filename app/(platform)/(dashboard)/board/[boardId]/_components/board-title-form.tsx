@@ -15,9 +15,11 @@ interface BoardTitleFormProps {
 export default function BoardTitleForm({data}: BoardTitleFormProps) {
   const {execute} = useAction(updateBoard, {
      onSuccess: (data) => {
-        toast.success(`Board "${data.title}" updated!`, {
+       
+        toast.success(`Board renamed "${data.title}"!`, {
             position: 'top-center'
         });
+
         setTitle(data.title);
         disableEditing();
      },
@@ -30,6 +32,7 @@ export default function BoardTitleForm({data}: BoardTitleFormProps) {
   const inputRef = useRef<ElementRef<"input">>(null);
   const [title, setTitle] = useState(data.title);
   const [isEditing, setIsEditing] = useState(false);
+
    
 
    const enableEditing = () => {
@@ -46,6 +49,11 @@ export default function BoardTitleForm({data}: BoardTitleFormProps) {
 
    const onSubmit = (formData: FormData) => {
     const title = formData.get("title") as string;
+
+     if(title === data.title) {
+      return disableEditing();
+     };
+
      execute({
         title,
         id: data.id,
@@ -55,7 +63,8 @@ export default function BoardTitleForm({data}: BoardTitleFormProps) {
 
    const onBlur = () => {
      formRef.current?.requestSubmit();
-   }
+ 
+   };
 
 
    if(isEditing) {
